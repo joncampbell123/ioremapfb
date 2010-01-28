@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# NOTE: for my test machine, where altintel9xxfb has already set up 640x480x16
+# this time, multiple fb's we purposely try to make a splitscreen :)
+X1=$(((((180*640*2)+4095)/4096)*4096))
+echo name=asdf,fb_base=0xD0000000,fb_size=$X1,bpp=16,xres=640,yres=180,pci=0000:00:02.0 >/sys/bus/platform/devices/ioremap2fb.0/driver/register_fb
+X2=$(((((180*640*2)+4095)/4096)*4096))
+echo name=asdf,fb_base=$((0xD0000000+$X1)),fb_size=$X1,bpp=16,xres=640,yres=180,pci=0000:00:02.0 >/sys/bus/platform/devices/ioremap2fb.0/driver/register_fb
+

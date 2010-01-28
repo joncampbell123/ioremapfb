@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# NOTE: for my test machine, where altintel9xxfb has already set up 640x480x16
+echo name=asdf,fb_base=0xD0000000,fb_size=0x800000,bpp=16,xres=640,yres=480,pci=0000:00:02.0 >/sys/bus/platform/devices/ioremap2fb.0/driver/register_fb

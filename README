@@ -1,0 +1,40 @@
+ioremap framebuffer device. Does not talk to a particular PCI device,
+but instead takes instructions from the program loading the module
+on which device to take and what the VESA BIOS said the framebuffer is.
+
+This is more advanced than Tv Box v2.1's mapper. When loaded, the
+module does not immediately claim anything but instead creates a
+sysfs platform device with an attribute named "register_fb".
+
+Writing descriptive info to the register_fb node causes the creation
+of a framebuffer, or an error if invalid. When created, the framebuffer
+is bound to a device and left there. The assumption is that something
+else, perhaps a user-space process, has already prepared the device
+for proper display.
+
+The framebuffer created will have a sysfs node named "unregister_me"
+that causes this driver to destroy and unload the framebuffer.
+
+Param string format:
+
+name=value[,name=value[,...]]
+
+Name                     Meaning
+--------------------------------
+name                     This will become the framebufer "id" reported in fbset
+pci                      Which PCI device to bind to. It must be a VGA or display adapter class device
+xres                     resolution of the framebuffer
+yres                     resolution of the framebuffer
+pitch                    pitch of the framebuffer (bytes per line)
+bpp                      bit per pixel preset (16, 24, 32)
+bits                     bits per pixel
+red                      bit position of red field
+green                    bit position of green field
+blue                     bit position of blue field
+fb_base                  Framebuffer base address
+fb_size                  Framebuffer size
+
+Note that fb_base and fb_size must lie entirely within a resource on the specified PCI device,
+or the driver will reject it. If you don't specify base and size, one will be chosen from
+the PCI device resources automatically, based on size and attributes.
+
