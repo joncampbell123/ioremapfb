@@ -519,7 +519,7 @@ static ssize_t store_register_fb(struct device_driver *dev,const char *buf,size_
 				ret = -ENOMEM;
 			}
 
-			printk(KERN_DEBUG "ioremap\n");
+/*			printk(KERN_DEBUG "ioremap\n"); */
 			if (ret >= 0 && (mmap = ioremap(nfb->fb_base,nfb->fb_size)) == NULL) {
 /*				printk(KERN_DEBUG "cannot ioremap()\n"); */
 				ret = -ENOMEM;
