@@ -449,7 +449,7 @@ static ssize_t store_register_fb(struct device_driver *dev,const char *buf,size_
 	if (ret >= 0) {
 		pci_enable_device(nfb->pci_dev);
 	
-		printk(KERN_DEBUG "framebuffer_alloc\n");
+/*		printk(KERN_DEBUG "framebuffer_alloc\n"); */
 		f = framebuffer_alloc(sizeof(struct ioremap2fb_info), &nfb->pci_dev->dev);
 		if (f == NULL) {
 			ret = -ENOMEM;
@@ -460,7 +460,7 @@ static ssize_t store_register_fb(struct device_driver *dev,const char *buf,size_
 			struct fb_fix_screeninfo *fix = &f->fix;
 			struct fb_var_screeninfo *var = &f->var;
 			struct ioremap2fb_info *priv = f->par;
-			printk(KERN_DEBUG "framebuffer setup\n");
+/*			printk(KERN_DEBUG "framebuffer setup\n"); */
 			f->pseudo_palette = priv->pseudo_palette;
 			priv->pci_dev = nfb->pci_dev;
 			priv->index = index;
@@ -510,27 +510,27 @@ static ssize_t store_register_fb(struct device_driver *dev,const char *buf,size_
 			strncpy(fix->id,nfb->name,sizeof(fix->id)-1);
 			fix->id[sizeof(fix->id)-1] = 0;
 
-			printk(KERN_DEBUG "request_mem_region\n");
+/*			printk(KERN_DEBUG "request_mem_region\n"); */
 			if (request_mem_region(nfb->fb_base,nfb->fb_size,"ioremap2fb framebuffer")) {
 				req_mem = 1;
 			}
 			else {
-				printk(KERN_DEBUG "cannot claim memory region\n");
+/*				printk(KERN_DEBUG "cannot claim memory region\n"); */
 				ret = -ENOMEM;
 			}
 
 			printk(KERN_DEBUG "ioremap\n");
 			if (ret >= 0 && (mmap = ioremap(nfb->fb_base,nfb->fb_size)) == NULL) {
-				printk(KERN_DEBUG "cannot ioremap()\n");
+/*				printk(KERN_DEBUG "cannot ioremap()\n"); */
 				ret = -ENOMEM;
 			}
 
 			f->screen_base = mmap;
-			printk(KERN_DEBUG "alloc cmap\n");
+/*			printk(KERN_DEBUG "alloc cmap\n"); */
 			if (ret >= 0 && fb_alloc_cmap(&f->cmap,256,0) < 0)
 				ret = -ENOMEM;
 
-			printk(KERN_DEBUG "reg framebuffer\n");
+/*			printk(KERN_DEBUG "reg framebuffer\n"); */
 			if (ret >= 0) {
 				if (register_framebuffer(f)) {
 					printk(KERN_DEBUG "failed to register framebuffer\n");
@@ -565,7 +565,7 @@ static ssize_t store_register_fb(struct device_driver *dev,const char *buf,size_
 		BUG_ON(nfb->pci_dev == NULL);
 		framebuffer[index] = f;
 
-		printk(KERN_DEBUG "%d\n",index);
+/*		printk(KERN_DEBUG "%d\n",index); */
 		f->dev->platform_data = (void*)priv;
 		framebuffer_unreg_attr[index] = dev_attr_unregister_me;
 		if (!device_create_file(f->dev,&framebuffer_unreg_attr[index]))
@@ -573,7 +573,7 @@ static ssize_t store_register_fb(struct device_driver *dev,const char *buf,size_
 	}
 
 	if (ret < 0 && reg_fb) {
-		printk(KERN_DEBUG "Unregister framebuffer\n");
+/*		printk(KERN_DEBUG "Unregister framebuffer\n"); */
 		BUG_ON(f == NULL);
 		unregister_framebuffer(f);
 		fb_dealloc_cmap(&f->cmap);
@@ -581,17 +581,17 @@ static ssize_t store_register_fb(struct device_driver *dev,const char *buf,size_
 		f = NULL;
 	}
 	if (ret < 0 && req_mem) {
-		printk(KERN_DEBUG "Releasing mem region\n");
+/*		printk(KERN_DEBUG "Releasing mem region\n"); */
 		release_mem_region(nfb->fb_base,nfb->fb_size);
 		req_mem = 0;
 	}
 	if (ret < 0 && mmap != NULL) {
-		printk(KERN_DEBUG "iounmap\n");
+/*		printk(KERN_DEBUG "iounmap\n"); */
 		iounmap(mmap);
 		mmap = NULL;
 	}
 	if (ret < 0 && nfb->pci_dev != NULL) {
-		printk(KERN_DEBUG "pci dev put\n");
+/*		printk(KERN_DEBUG "pci dev put\n"); */
 		pci_dev_put(nfb->pci_dev);
 		nfb->pci_dev = NULL;
 	}
