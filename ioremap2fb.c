@@ -484,7 +484,7 @@ static ssize_t store_register_fb(struct device_driver *dev,const char *buf,size_
 			var->green.offset = nfb->green_shift;
 			var->blue.offset = nfb->blue_shift;
 			if (nfb->bits_per_pixel == 16) {
-				if (nfb->blue_shift == (5+6)) {
+				if (nfb->red_shift == (5+6)) {
 					var->red.length = 5;
 					var->green.length = 6;
 					var->blue.length = 5;
