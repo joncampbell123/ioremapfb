@@ -1,7 +1,8 @@
 obj-m += ioremap2fb.o
 
 ifndef $(KDIR)
-KDIR=/usr/src/linux-2.6.30
+KDIR_RAW=$(shell uname -r | sed 's/\-.*$$//')
+KDIR=/usr/src/linux-$(KDIR_RAW)
 #KDIR=/usr/src/linux-2.6.28
 #KDIR=/usr/src/linux-2.6.28.8
 #KDIR=/mnt/sda1/ext2/usr/src/2.6.28.10
