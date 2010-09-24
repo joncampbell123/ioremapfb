@@ -34,7 +34,7 @@ blue                     bit position of blue field
 fb_base                  Framebuffer base address
 fb_size                  Framebuffer size
 
-Note that fb_base and fb_size must lie entirely within a resource on the specified PCI device,
+fb_base and fb_size must lie entirely within a resource on the specified PCI device,
 or the driver will reject it. If you don't specify base and size, one will be chosen from
 the PCI device resources automatically, based on size and attributes.
 

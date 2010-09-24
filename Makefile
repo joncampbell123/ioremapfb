@@ -8,7 +8,7 @@ KDIR=/usr/src/linux-$(KDIR_RAW)
 #KDIR=/mnt/sda1/ext2/usr/src/2.6.28.10
 endif
 
-all: ioremap2fb.ko
+all: config.h ioremap2fb.ko
 
 ioremap2fb.ko: ioremap2fb.c
 	make -C $(KDIR) M=$(PWD) modules
@@ -18,7 +18,10 @@ install:
 
 clean:
 	make -C $(KDIR) M=$(PWD) clean
-	rm -f modules.order test_info *~
+	rm -f modules.order test_info *~ config.h
+
+config.h:
+	./gen-version
 
 load:
 	rmmod ioremap2fb || true
