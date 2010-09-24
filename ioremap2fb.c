@@ -26,6 +26,8 @@
 #include <asm/io.h>
 #include <asm/mtrr.h>
 
+#include "config.h"
+
 #define MAX_FRAMEBUFFERS		16
 
 static struct fb_info*			framebuffer[MAX_FRAMEBUFFERS] = {NULL};
@@ -647,6 +649,6 @@ module_init(ioremapfb_init);
 module_exit(ioremapfb_exit);
 
 MODULE_AUTHOR("Jonathan Campbell");
-MODULE_DESCRIPTION("Dumb framebuffer for PCI video devices already initialized");
+MODULE_DESCRIPTION("Dumb framebuffer for PCI video devices already initialized " IOREMAPFB_BUILD_BANNER);
 MODULE_LICENSE("GPL");
 
