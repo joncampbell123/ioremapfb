@@ -447,8 +447,11 @@ static ssize_t store_register_fb(struct device_driver *dev,const char *buf,size_
 	}
 
 	if (ret >= 0) {
-		pci_enable_device(nfb->pci_dev);
-	
+		if (pci_enable_device(nfb->pci_dev))
+			ret = -EINVAL;
+	}
+
+	if (ret >= 0) {	
 /*		printk(KERN_DEBUG "framebuffer_alloc\n"); */
 		f = framebuffer_alloc(sizeof(struct ioremap2fb_info), &nfb->pci_dev->dev);
 		if (f == NULL) {
