@@ -46,18 +46,6 @@ struct ioremapfb_info {
 	u32			pseudo_palette[256];
 };
 
-#if 0
-static unsigned long		fb_base=0,fb_size=0;
-static int			fb_bpp=0,fb_stride=0,fb_width=0,fb_height=0;
-static char*			fb_pci_dev=NULL;
-static char*			fb_base_size=NULL;
-static struct pci_dev*		pci_dev=NULL;
-static struct fb_info*		framebuffer_info=NULL;
-static struct ioremapfb_info*	framebuffer_priv=NULL;
-static int			fb_reg=0;
-static char*			fb_vram=NULL;
-#endif
-
 static struct platform_driver ioremap2fb_driver = {
 	.driver = {
 		.name = "ioremap2fb",
@@ -131,85 +119,6 @@ struct pci_dev *ioremap2fb_get_pci_dev(const char *s) {
 
 	return NULL;
 }
-
-#if 0
-static int __init setup_fb(void) {
-	int ret;
-
-	pci_enable_device(pci_dev);
-
-	fb_vram = ioremap(fb_base,fb_size);
-	if (fb_vram == NULL) {
-		printk(KERN_ERR "Cannot mmap vram\n");
-		return -ENOMEM;
-	}
-
-	framebuffer_info = framebuffer_alloc(sizeof(struct ioremapfb_info), &pci_dev->dev);
-	if (!framebuffer_info) {
-		printk(KERN_ERR "failed to register framebuffer\n");
-		return -ENOMEM;
-	}
-	framebuffer_priv = framebuffer_info->par;
-	framebuffer_info->pseudo_palette = framebuffer_priv->pseudo_palette;
-
-	pci_set_drvdata(pci_dev,framebuffer_info);
-
-	ioremapfb_var.xres = ioremapfb_var.xres_virtual = fb_width;
-	ioremapfb_var.yres = ioremapfb_var.yres_virtual = fb_height;
-	ioremapfb_var.bits_per_pixel = fb_bpp;
-	ioremapfb_fix.line_length = fb_stride;
-	ioremapfb_fix.visual = FB_VISUAL_TRUECOLOR;
-	ioremapfb_fix.smem_start = fb_base;
-	ioremapfb_fix.smem_len = fb_size;
-
-	ioremapfb_var.pixclock = 10000000 / fb_width * 1000 / fb_height;
-	ioremapfb_var.left_margin = (fb_width / 8) & 0xF8;
-	ioremapfb_var.right_margin = (fb_width / 8) & 0xF8;
-
-	if (fb_bpp == 16) {
-		ioremapfb_var.red.offset = 11;
-		ioremapfb_var.red.length = 5;
-		ioremapfb_var.green.offset = 5;
-		ioremapfb_var.green.length = 6;
-		ioremapfb_var.blue.offset = 0;
-		ioremapfb_var.blue.length = 5;
-	}
-
-	framebuffer_info->flags = FBINFO_DEFAULT | FBINFO_HWACCEL_DISABLED;
-	framebuffer_info->fbops = &ioremapfb_ops;
-	framebuffer_info->screen_base = fb_vram;
-	framebuffer_info->screen_size = fb_size;
-	framebuffer_info->fix = ioremapfb_fix;
-	framebuffer_info->var = ioremapfb_var;
-
-	if (fb_alloc_cmap(&framebuffer_info->cmap, 256, 0) < 0) {
-		printk(KERN_ERR "Cannot alloc cmap\n");
-		return 1;
-	}
-
-	if ((ret=register_framebuffer(framebuffer_info)) < 0) {
-		printk(KERN_ERR "Cannot register framebuffer code %d\n",ret);
-		fb_dealloc_cmap(&framebuffer_info->cmap);
-		return ret;
-	}
-
-	fb_reg = 1;
-	return 0;
-}
-#endif
-
-#if 0
-static void __exit unsetup_fb(void) {
-	if (framebuffer_info) {
-		if (fb_vram) iounmap(fb_vram);
-		fb_vram = NULL;
-		framebuffer_priv = NULL;
-		if (fb_reg) unregister_framebuffer(framebuffer_info);
-		framebuffer_release(framebuffer_info);
-		framebuffer_info = NULL;
-	}
-}
-#endif
 
 static unsigned int count_active(void) {
 	unsigned int i,count=0;
@@ -553,12 +462,6 @@ static ssize_t store_register_fb(struct device_driver *dev,const char *buf,size_
 			f = NULL;
 		}
 	}
-
-#if 0
-	/* DEBUG: make it fail */
-	if (1 && ret >= 0)
-		ret = -ENOMEM;
-#endif
 
 	/* if success, then store the pointer, and hold onto the PCI device */
 	if (ret >= 0) {
