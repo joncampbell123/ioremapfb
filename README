@@ -2,9 +2,8 @@ ioremap framebuffer device. Does not talk to a particular PCI device,
 but instead takes instructions from the program loading the module
 on which device to take and what the VESA BIOS said the framebuffer is.
 
-This is more advanced than Tv Box v2.1's mapper. When loaded, the
-module does not immediately claim anything but instead creates a
-sysfs platform device with an attribute named "register_fb".
+When loaded, the module does not immediately claim anything but instead
+creates a sysfs platform device with an attribute named "register_fb".
 
 Writing descriptive info to the register_fb node causes the creation
 of a framebuffer, or an error if invalid. When created, the framebuffer
